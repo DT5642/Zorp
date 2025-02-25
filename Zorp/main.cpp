@@ -4,7 +4,7 @@
 using std::cout;
 using std::cin;
 
-//Console commands for universal functionality
+//Console commands for universal functionality (Windows + Linex)
 const char* ESC = "\x1b";
 const char* CSI = "\x1b[";
 const char* TITLE = "\x1b[5;20H";
