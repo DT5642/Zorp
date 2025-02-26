@@ -1,10 +1,12 @@
 #include <iostream>
 #include <Windows.h>
+#include <random>
+#include <time.h>
 
 using std::cout;
 using std::cin;
 
-//Console commands for universal functionality (Windows + Linex)
+//Console commands for universal functionality (Windows + Linux)
 const char* ESC = "\x1b";
 const char* CSI = "\x1b[";
 const char* TITLE = "\x1b[5;20H";
@@ -17,12 +19,40 @@ const char* RESTORE_CURSOR_POS = "\x1b[u";
 
 void main()
 {
+	const int EMPTY = 0;
+	const int ENEMY = 1;
+	const int TREASURE = 2;
+	const int FOOD = 3;
+	const int ENTRANCE = 4;
+	const int EXIT = 5;
+	const int MAX_RANDOM_TYPE = FOOD + 1;
+	const int MAZE_WIDTH = 10;
+	const int MAZE_HEIGHT = 6;
+
 	//Set output mode to handle virtual terminal sequences
 	DWORD dwMode = 0;
 	HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 	GetConsoleMode(hOut, &dwMode);
 	dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
 	SetConsoleMode(hOut, dwMode);
+
+	//Create 2D array
+	int rooms[MAZE_HEIGHT][MAZE_WIDTH];
+
+	srand(time(nullptr));
+
+	//Fill the awways with room types
+	for (int y = 0; y < MAZE_HEIGHT; y++)
+	{
+		for (int x = 0; x < MAZE_WIDTH; x++)
+		{
+			rooms[y][x] = rand() % MAX_RANDOM_TYPE;
+		}
+	}
+
+	//Set the entrance and exit of the maze
+	rooms[0][0] = ENTRANCE;
+	rooms[MAZE_HEIGHT - 1][MAZE_WIDTH - 1] = EXIT;
 
 	cout << "Hello world!\n\n";
 
@@ -40,6 +70,23 @@ void main()
 
 	//Save cursor position
 	cout << SAVE_CURSOR_POS;
+
+	//Output the map
+	cout << "\n\n\n\n";
+
+	for (int y = 0; y < MAZE_HEIGHT; y++)
+	{
+		cout << INDENT;
+		for (int x = 0; x < MAZE_WIDTH; x++)
+		{
+			cout << "[ " << rooms[y][x] << " ] ";
+		}
+		cout << "\n";
+	}
+
+	//Move the cursor back to the top of the map
+	cout << RESTORE_CURSOR_POS;
+
 	cout << INDENT << "How tall are you in centimeters?\n" << INDENT << YELLOW;
 	cin >> height;
 	cout << RESET_COLOR;
@@ -66,8 +113,10 @@ void main()
 
 	//Move the cursor to the start of the 1st question
 	cout << RESTORE_CURSOR_POS;
-	//Delete the next 4 lines of text
-	cout << CSI << "4M";
+	//Delete the next 3 lines of text
+	cout << CSI << "3M";
+	//Insert 3 lines (so map stays in the same place)
+	cout << CSI << "3L";
 
 	cout << INDENT << "What is the first letter of your name?\n" << INDENT << YELLOW;
 	cin >> firstLetterOfName;
@@ -92,12 +141,8 @@ void main()
 	cin.ignore(cin.rdbuf()->in_avail());
 	cin.get();
 
-	//Move the cursor to the start of the 1st question
-	cout << RESTORE_CURSOR_POS;
-	//Cursor up 1
-	cout << CSI << "A";
-	//Delete the next 4 lines of text
-	cout << CSI << "4M";
+	//Move the cursor to the start of the 1st question, then up 1, then delete and insert 4 lines
+	cout << RESTORE_CURSOR_POS << CSI << "A" << CSI << "4M" << CSI << "4L";
 
 	if (firstLetterOfName != 0)
 	{
@@ -109,6 +154,11 @@ void main()
 	}
 
 	cout << INDENT << "\nUsing a complex deterministic algorithm, it has been calculated that you have " << avatarHP << " hit point(s)\n";
+
+	cout << "\n" << INDENT << "Press 'Enter' to exit the program.\n";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin.get();
 
 	return;
 }
