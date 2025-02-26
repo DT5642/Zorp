@@ -1,5 +1,5 @@
 ﻿  main.cpp
-C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(21,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
-C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(42,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(149,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(25,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
+C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(46,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(194,28): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   Zorp.vcxproj -> C:\Users\s250053\Documents\Git\Zorp\x64\Debug\Zorp.exe
