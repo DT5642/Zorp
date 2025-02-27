@@ -2,58 +2,11 @@
 #include <Windows.h>
 #include <random>
 #include <time.h>
+#include "Point2D.h"
+#include "GameDefines.h"
 
 using std::cout;
 using std::cin;
-
-//Console commands for universal functionality (Windows + Linux)
-const char* ESC = "\x1b";
-const char* CSI = "\x1b[";
-const char* RED = "\x1b[91m";
-const char* BLUE = "\x1b[94m";
-const char* WHITE = "\x1b[97m";
-const char* GREEN = "\x1b[92m";
-const char* INDENT = "\x1b[5C";
-const char* YELLOW = "\x1b[93m";
-const char* MAGENTA = "\x1b[95m";
-const char* TITLE = "\x1b[5;20H";
-const char* RESET_COLOR = "\x1b[0m";
-const char* EXTRA_OUTPUT_POS = "\x1b[25;6H";
-
-//Constant ints
-const int EMPTY = 0;
-const int ENEMY = 1;
-const int TREASURE = 2;
-const int FOOD = 3;
-const int ENTRANCE = 4;
-const int EXIT = 5;
-
-const int MAX_RANDOM_TYPE = FOOD + 1;
-
-const int MAZE_WIDTH = 10;
-const int MAZE_HEIGHT = 6;
-
-const int INDENT_X = 5;
-const int ROOM_DESC_Y = 8;
-const int MOVEMENT_DESC_Y = 9;
-const int MAP_Y = 13;
-const int PLAYER_INPUT_X = 30;
-const int PLAYER_INPUT_Y = 23;
-
-const int WEST = 4;
-const int EAST = 6;
-const int NORTH = 8;
-const int SOUTH = 2;
-
-const int LOOK = 9;
-const int FIGHT = 10;
-
-//Structs
-struct Point2D
-{
-	int x;
-	int y;
-};
 
 //Functions
 void Initialize(int map[MAZE_HEIGHT][MAZE_WIDTH]);
@@ -117,68 +70,68 @@ void main()
 		switch (command)
 		{
 		case EAST:
-			{
-				if (player.x < MAZE_WIDTH - 1)
-				{
-					player.x++;
-					break;
-				}
-			}
+		{
+		if (player.x < MAZE_WIDTH - 1)
+		{
+			player.x++;
+			break;
+		}
+		}
 		case WEST:
-			{
-				if (player.x > 0)
-				{
-					player.x--;
-					break;
-				}
-			}
+		{
+		if (player.x > 0)
+		{
+			player.x--;
+			break;
+		}
+		}
 		case NORTH:
-			{
-				if (player.y > 0)
-				{
-					player.y--;
-					break;
-				}
-			}
+		{
+		if (player.y > 0)
+		{
+			player.y--;
+			break;
+		}
+		}
 		case SOUTH:
-			{
-				if (player.y < MAZE_HEIGHT - 1)
-				{
-					player.y++;
-					break;
-				}
-			}
+		{
+		if (player.y < MAZE_HEIGHT - 1)
+		{
+			player.y++;
+			break;
+		}
+		}
 		case LOOK:
-			{
-				DrawPlayer(player);
-				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
-				cin.clear();
-				cin.ignore(cin.rdbuf()->in_avail());
-				cin.get();
-				break;
-			}
+		{
+			DrawPlayer(player);
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
+			cin.clear();
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.get();
+			break;
+		}
 		case FIGHT:
-			{
-				DrawPlayer(player);
-				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You could try to fight, but you don't have a weapon\n";
-				cout << INDENT << "Press 'Enter' to continue.";
-				cin.clear();
-				cin.ignore(cin.rdbuf()->in_avail());
-				cin.get();
-				break;
-			}
+		{
+			DrawPlayer(player);
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You could try to fight, but you don't have a weapon\n";
+			cout << INDENT << "Press 'Enter' to continue.";
+			cin.clear();
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.get();
+			break;
+		}
 		default:
-			{
-				//The direction was not valid,
-				//Do nothing, go back to the top of the loop and ask again
-				DrawPlayer(player);
-				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
-				cout << INDENT << "Press 'Enter' to continue.";
-				cin.clear();
-				cin.ignore(cin.rdbuf()->in_avail());
-				cin.get();
-				break;
-			}
+		{
+			//The direction was not valid,
+			//Do nothing, go back to the top of the loop and ask again
+			DrawPlayer(player);
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
+			cout << INDENT << "Press 'Enter' to continue.";
+			cin.clear();
+			cin.ignore(cin.rdbuf()->in_avail());
+			cin.get();
+			break;
+		}
 		}
 	}
 	//End of game loop
@@ -239,35 +192,35 @@ void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], Point2D position)
 	switch (map[position.y][position.x])
 	{
 	case EMPTY:
-		{
-			cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
+		break;
+	}
 	case ENEMY:
-		{
-			cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
+		break;
+	}
 	case TREASURE:
-		{
-			cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
+		break;
+	}
 	case FOOD:
-		{
-			cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
+		break;
+	}
 	case ENTRANCE:
-		{
-			cout << "[ " << WHITE << "\x9d" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << WHITE << "\x9d" << RESET_COLOR << " ] ";
+		break;
+	}
 	case EXIT:
-		{
-			cout << "[ " << WHITE << "\xFE" << RESET_COLOR << " ] ";
-			break;
-		}
+	{
+		cout << "[ " << WHITE << "\xFE" << RESET_COLOR << " ] ";
+		break;
+	}
 	}
 }
 
@@ -304,35 +257,35 @@ void DrawRoomDescription(int roomType)
 	switch (roomType)
 	{
 	case EMPTY:
-		{
-			cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
-			break;
-		}
+	{
+		cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
+		break;
+	}
 	case ENEMY:
-		{
-			cout << INDENT << "BEWARE. An enemy is approaching.\n";
-			break;
-		}
+	{
+		cout << INDENT << "BEWARE. An enemy is approaching.\n";
+		break;
+	}
 	case TREASURE:
-		{
-			cout << INDENT << "Your journey has been rewarded. You have found some treasure.\n";
-			break;
-		}
+	{
+		cout << INDENT << "Your journey has been rewarded. You have found some treasure.\n";
+		break;
+	}
 	case FOOD:
-		{
-			cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
-			break;
-		}
+	{
+		cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
+		break;
+	}
 	case ENTRANCE:
-		{
-			cout << INDENT << "The entrance you used to enter this maze is blocked. There is no going back.\n";
-			break;
-		}
+	{
+		cout << INDENT << "The entrance you used to enter this maze is blocked. There is no going back.\n";
+		break;
+	}
 	case EXIT:
-		{
-			cout << INDENT << "Despite all odds, you made it to the exit. Congratulations.\n";
-			break;
-		}
+	{
+		cout << INDENT << "Despite all odds, you made it to the exit. Congratulations.\n";
+		break;
+	}
 	}
 }
 
