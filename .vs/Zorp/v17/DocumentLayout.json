@@ -13,7 +13,7 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedWidth": 353,
+          "DockedWidth": 200,
           "SelectedChildIndex": 0,
           "Children": [
             {
@@ -24,9 +24,9 @@
               "RelativeDocumentMoniker": "Zorp\\main.cpp",
               "ToolTip": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\main.cpp",
               "RelativeToolTip": "Zorp\\main.cpp",
-              "ViewState": "AgIAACoAAAAAAAAAAADwvzoAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAHUAAAAAAAAAAAAAAIcAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-02-21T03:08:01.21Z",
+              "WhenOpened": "2025-02-27T00:04:01.041Z",
               "EditorCaption": ""
             }
           ]

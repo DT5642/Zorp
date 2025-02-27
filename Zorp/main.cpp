@@ -29,9 +29,30 @@ void main()
 	const int FOOD = 3;
 	const int ENTRANCE = 4;
 	const int EXIT = 5;
+
 	const int MAX_RANDOM_TYPE = FOOD + 1;
+
 	const int MAZE_WIDTH = 10;
 	const int MAZE_HEIGHT = 6;
+
+	const int INDENT_X = 5;
+	const int ROOM_DESC_Y = 8;
+	const int MAP_Y = 13;
+	const int PLAYER_INPUT_X = 30;
+	const int PLAYER_INPUT_Y = 11;
+
+	const int WEST = 4;
+	const int EAST = 6;
+	const int NORTH = 8;
+	const int SOUTH = 2;
+
+	bool gameOver = false;
+	int playerX = 0;
+	int playerY = 0;
+
+	int height = 0;
+	int avatarHP = 0;
+	char firstLetterOfName = 0;
 
 	//Set output mode to handle virtual terminal sequences
 	DWORD dwMode = 0;
@@ -69,24 +90,16 @@ void main()
 
 	cout << "Hello world!\n\n";
 
-	int height = 0;
-	int avatarHP = 0;
-	char firstLetterOfName = 0;
-
 	cout << TITLE << MAGENTA << "Welcome to Zorp!\n" << RESET_COLOR;
 	cout << INDENT << "Zorp is a game of adventure, danger, and low cunning.\n";
 	cout << INDENT << "It is definitely not related to any other text-based adventure game...\n";
 	cin.get();
 
-	cout << "First, some questions...\n";
-	cin.get();
-
 	//Save cursor position
 	cout << SAVE_CURSOR_POS;
 
-	//Output the map
-	cout << "\n\n\n\n";
-
+	//Output map
+	cout << CSI << MAP_Y << ";" << 0 << "H";
 	for (int y = 0; y < MAZE_HEIGHT; y++)
 	{
 		cout << INDENT;
@@ -95,110 +108,193 @@ void main()
 			switch (rooms[y][x])
 			{
 			case EMPTY:
-				{
-					cout << "[ " <<  GREEN << "\xb0" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
+				break;
+			}
 			case ENEMY:
-				{
-					cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
+				break;
+			}
 			case TREASURE:
-				{
-					cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
+				break;
+			}
 			case FOOD:
-				{
-					cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
+				break;
+			}
 			case ENTRANCE:
-				{
-					cout << "[ " << WHITE << "\x9d" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << WHITE << "\x9d" << RESET_COLOR << " ] ";
+				break;
+			}
 			case EXIT:
-				{
-					cout << "[ " << WHITE << "\xFE" << RESET_COLOR << " ] ";
-					break;
-				}
+			{
+				cout << "[ " << WHITE << "\xFE" << RESET_COLOR << " ] ";
+				break;
+			}
 			}
 		}
 		cout << "\n";
 	}
 
-	//Move the cursor back to the top of the map
-	cout << RESTORE_CURSOR_POS;
-
-	cout << INDENT << "How tall are you in centimeters?\n" << INDENT << YELLOW;
-	cin >> height;
-	cout << RESET_COLOR;
-
-	if (cin.fail())
+	//Game loop
+	while (!gameOver)
 	{
-		cout << INDENT << "\nYou have failed the first challenge\nA trap door opens below your feet and the darkness consumes you as you fall\n";
-		cout << INDENT << "\nYou wake to find your arms & legs scratched and battered\nLooking around in the dim light you see a larger gate roughly 100m away\n";
-		cout << INDENT << "\nAs you notice, blinding lights brighten the area, revealing it to be a dugout in a cave\nThe ground shakes as the gate begins to open\n";
-		cout << INDENT << "\nEmerging with a roar, a Rancor appears out of the shadows\nIn your injured state, you struggle to move\n";
-		cout << INDENT << "\nIt sluggishly scoops down and grabs you in it's long limbs\nYou feel yourself getting crushed as it adjusts its grip on you\n";
-		cout << INDENT << "\nIt shoves the upper part of your body in it's mouth and after a crunch, swallows it down\nIt then does the same with what's left of you\n";
-		cout << INDENT << "\nYou have died\n";
+		//Prepare screen for output
+		//Move cursor to start of the 1st Q, then up 1, delete and insert 4 lines
+		cout << RESTORE_CURSOR_POS << CSI << "A" << CSI << "4M" << CSI << "4L" << "\n";
+
+		//Write description of current room
+		switch (rooms[playerY][playerX])
+		{
+		case EMPTY:
+			{
+				cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
+				break;
+			}
+		case ENEMY:
+			{
+				cout << INDENT << "BEWARE. An enemy is approaching.\n";
+				break;
+			}
+		case TREASURE:
+			{
+				cout << INDENT << "Your journey has been rewarded. You have found some treasure.\n";
+				break;
+			}
+		case FOOD:
+			{
+				cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
+				break;
+			}
+		case ENTRANCE:
+			{
+				cout << INDENT << "The entrance you used to enter this maze is blocked. There is no going back.\n";
+				break;
+			}
+		case EXIT:
+			{
+				cout << INDENT << "Despite all odds, you made it to the exit. Congratulations.\n";
+				gameOver = true;
+				continue;
+			}
+		}
+
+		//List the directions the player can take
+		cout << INDENT << "You can see paths leading to the " <<
+			((playerX > 0) ? "west (4), " : "") <<
+			((playerX < MAZE_WIDTH - 1) ? "east (6), " : "") <<
+			((playerY > 0) ? "north (8), " : "") <<
+			((playerY < MAZE_HEIGHT - 1) ? "south (2), " : "") << "\n";
+
+		cout << INDENT << "Where to now?";
+
+		int x = INDENT_X + (6 * playerX) + 3;
+		int y = MAP_Y + playerY;
+
+		// draw the player's position on the map
+		// move cursor to map pos and delete character at current position
+		cout << CSI << y << ";" << x << "H";
+		cout << MAGENTA << "\x81";
+		// move cursor to position for player to enter input
+
+		cout << CSI << PLAYER_INPUT_Y << ";" << PLAYER_INPUT_X << "H" << YELLOW;
+
+		// clear the input buffer, ready for player input
+		cin.clear();
+		cin.ignore(cin.rdbuf()->in_avail());
+
+		int direction = 0;
+		cin >> direction;
+		cout << RESET_COLOR;
+
+		if (cin.fail())
+		{
+			continue; // go back to the top of the game loop and ask again
+		}
+
+		//Before updating the player position, redraw the old room character over the old position
+		cout << CSI << y << ";" << x << "H";
+		switch (rooms[playerY][playerX])
+		{
+		case EMPTY:
+			{
+				cout << GREEN << "\xb0" << RESET_COLOR;
+				break;
+			}
+		case ENEMY:
+			{
+				cout << RED << "\x94" << RESET_COLOR;
+				break;
+			}
+		case TREASURE:
+			{
+				cout << YELLOW << "$" << RESET_COLOR;
+				break;
+			}
+		case FOOD:
+			{
+				cout << WHITE << "\xcf" << RESET_COLOR;
+				break;
+			}
+		case ENTRANCE:
+		{
+				cout << WHITE << "\x9d" << RESET_COLOR;
+				break;
+			}
+		case EXIT:
+			{
+				cout << WHITE << "\xFE" << RESET_COLOR;
+			}
+		}
+
+		switch (direction)
+		{
+		case EAST:
+			{
+				if (playerX < MAZE_WIDTH - 1)
+					{
+						playerX++;
+					}
+				break;
+		}
+		case WEST:
+			{
+				if (playerX > 0)
+					{
+						playerX--;
+					}
+				break;
+			}
+		case NORTH:
+			{
+				if (playerY > 0)
+					{
+						playerY--;
+					}
+				break;
+			}
+		case SOUTH:
+			{
+				if (playerY < MAZE_HEIGHT - 1)
+					{
+						playerY++;
+					}
+				break;
+			}
+		default:
+			{
+				//Do nothing, go back to the top of the loop and ask again
+				break;
+			}	
+		}
 	}
-	else
-	{
-		cout << INDENT << "You entered: " << height << "\n\n";
-	}
-
-	//Clear input buffer
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin.get();
-
-	//Move the cursor to the start of the 1st question
-	cout << RESTORE_CURSOR_POS;
-	//Delete the next 3 lines of text
-	cout << CSI << "3M";
-	//Insert 3 lines (so map stays in the same place)
-	cout << CSI << "3L";
-
-	cout << INDENT << "What is the first letter of your name?\n" << INDENT << YELLOW;
-	cin >> firstLetterOfName;
-	cout << RESET_COLOR;
-
-	if (cin.fail() || !isalpha(firstLetterOfName))
-	{
-		cout << INDENT << "\nYou have failed the second challenge\nThe sound of rushing water floods the room\n";
-		cout << INDENT << "\nBefore you can even process what is happening, water fills the room to chest height\nThe flames from the torches get washed away\n";
-		cout << INDENT << "\nDarkness drowns out the light leaving you frozen in fear, wishing you could see\n";
-		cout << INDENT << "\nAs you try to take a deep breath, some water dives into your lungs, triggering a fit of coughing\nYou don't last 2 minutes\n";
-		cout << INDENT << "\nYou have died\n";
-		
-	}
-	else
-	{
-		cout << INDENT << "You entered " << firstLetterOfName << "\n";
-	}
-
-	//Clear input buffer
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin.get();
-
-	//Move the cursor to the start of the 1st question, then up 1, then delete and insert 4 lines
-	cout << RESTORE_CURSOR_POS << CSI << "A" << CSI << "4M" << CSI << "4L";
-
-	if (firstLetterOfName != 0)
-	{
-		avatarHP = (float)height / (firstLetterOfName * 0.02f);
-	}
-	else
-	{
-		avatarHP = 0;
-	}
-
-	cout << INDENT << "\nUsing a complex deterministic algorithm, it has been calculated that you have " << avatarHP << " hit point(s)\n";
+	//End of game loop
 
 	cout << "\n" << INDENT << "Press 'Enter' to exit the program.\n";
 	cin.clear();
