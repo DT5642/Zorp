@@ -48,14 +48,21 @@ const int SOUTH = 2;
 const int LOOK = 9;
 const int FIGHT = 10;
 
+//Structs
+struct Point2D
+{
+	int x;
+	int y;
+};
+
 //Functions
 void Initialize(int map[MAZE_HEIGHT][MAZE_WIDTH]);
 void DrawWelcomeMessage();
-void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], int x, int y);
+void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], Point2D position);
 void DrawMap(int map[MAZE_HEIGHT][MAZE_WIDTH]);
 void DrawRoomDescription(int roomType);
-void DrawPlayer(int x, int y);
-void DrawValidDirections(int x, int y);
+void DrawPlayer( Point2D position);
+void DrawValidDirections(Point2D position);
 bool EnableVirtualTerminal();
 int GetCommand();
 
@@ -65,8 +72,8 @@ void main()
 	int rooms[MAZE_HEIGHT][MAZE_WIDTH];
 
 	bool gameOver = false;
-	int playerX = 0;
-	int playerY = 0;
+
+	Point2D player = { 0, 0 };
 
 	if (EnableVirtualTerminal() == false)
 	{
@@ -87,63 +94,63 @@ void main()
 	//Game loop
 	while (!gameOver)
 	{
-		DrawRoomDescription(rooms[playerY][playerX]);
+		DrawRoomDescription(rooms[player.y][player.x]);
 
-		DrawPlayer(playerX, playerY);
+		DrawPlayer(player);
 
-		if (rooms[playerY][playerX] == EXIT)
+		if (rooms[player.y][player.x] == EXIT)
 		{
 			gameOver = true;
 			continue;
 		}
 
 		//List the directions the player can take
-		DrawValidDirections(playerX, playerY);
+		DrawValidDirections(player);
 		int command = GetCommand();
 
 		//Before updating the player position, redraw the old room
 		//Character over the old position
 
-		DrawRoom(rooms, playerX, playerY);
+		DrawRoom(rooms, player);
 
 		//Update the player's position using the input movement data
 		switch (command)
 		{
 		case EAST:
 			{
-				if (playerX < MAZE_WIDTH - 1)
+				if (player.x < MAZE_WIDTH - 1)
 				{
-					playerX++;
+					player.x++;
 					break;
 				}
 			}
 		case WEST:
 			{
-				if (playerX > 0)
+				if (player.x > 0)
 				{
-					playerX--;
+					player.x--;
 					break;
 				}
 			}
 		case NORTH:
 			{
-				if (playerY > 0)
+				if (player.y > 0)
 				{
-					playerY--;
+					player.y--;
 					break;
 				}
 			}
 		case SOUTH:
 			{
-				if (playerY < MAZE_HEIGHT - 1)
+				if (player.y < MAZE_HEIGHT - 1)
 				{
-					playerY++;
+					player.y++;
 					break;
 				}
 			}
 		case LOOK:
 			{
-				DrawPlayer(playerX, playerY);
+				DrawPlayer(player);
 				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
 				cin.clear();
 				cin.ignore(cin.rdbuf()->in_avail());
@@ -152,7 +159,7 @@ void main()
 			}
 		case FIGHT:
 			{
-				DrawPlayer(playerX, playerY);
+				DrawPlayer(player);
 				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You could try to fight, but you don't have a weapon\n";
 				cout << INDENT << "Press 'Enter' to continue.";
 				cin.clear();
@@ -164,7 +171,7 @@ void main()
 			{
 				//The direction was not valid,
 				//Do nothing, go back to the top of the loop and ask again
-				DrawPlayer(playerX, playerY);
+				DrawPlayer(player);
 				cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
 				cout << INDENT << "Press 'Enter' to continue.";
 				cin.clear();
@@ -219,17 +226,17 @@ void DrawWelcomeMessage()
 	cout << INDENT << "It is definitely not related to any other text-based adventure game...\n\n";
 }
 
-void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], int x, int y)
+void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], Point2D position)
 {
 	//Find the console output position
-	int outX = INDENT_X + (6 * x) + 1;
-	int outY = MAP_Y + y;
+	int outX = INDENT_X + (6 * position.x) + 1;
+	int outY = MAP_Y + position.y;
 
 	//Jump to the correct loction
 	cout << CSI << outY << ";" << outX << "H";
 
 	//Draw the room
-	switch (map[y][x])
+	switch (map[position.y][position.x])
 	{
 	case EMPTY:
 		{
@@ -266,15 +273,17 @@ void DrawRoom(int map[MAZE_HEIGHT][MAZE_WIDTH], int x, int y)
 
 void DrawMap(int map[MAZE_HEIGHT][MAZE_WIDTH])
 {
+	Point2D position = { 0, 0 };
+
 	//Reset draw colours
 	cout << RESET_COLOR;
 
-	for (int y = 0; y < MAZE_HEIGHT; y++)
+	for (position.y = 0; position.y < MAZE_HEIGHT; position.y++)
 	{
 		cout << INDENT;
-		for (int x = 0; x < MAZE_WIDTH; x++)
+		for (position.x = 0; position.x < MAZE_WIDTH; position.x++)
 		{
-			DrawRoom(map, x, y);
+			DrawRoom(map, position);
 		}
 		cout << "\n";
 	}
@@ -327,18 +336,21 @@ void DrawRoomDescription(int roomType)
 	}
 }
 
-void DrawPlayer(int x, int y)
+void DrawPlayer( Point2D position)
 {
-	x = INDENT_X + (6 * x) + 3;
-	y = MAP_Y + y;
+	Point2D outPos =
+	{
+		INDENT_X + (6 * position.x) + 3,
+		MAP_Y + position.y
+	};
 
 	//Draw the player's position on the map
 	//Move cursor to map pos and delete character at current position
-	cout << CSI << y << ";" << x << "H";
+	cout << CSI << outPos.y << ";" << outPos.x << "H";
 	cout << MAGENTA << "\x81" << RESET_COLOR;
 }
 
-void DrawValidDirections(int x, int y)
+void DrawValidDirections(Point2D position)
 {
 	//Reset draw colours
 	cout << RESET_COLOR;
@@ -346,10 +358,10 @@ void DrawValidDirections(int x, int y)
 	//Jump to the correct location
 	cout << CSI << MOVEMENT_DESC_Y + 1 << ";" << 0 << "H";
 	cout << INDENT << "You can see paths leading to the " <<
-		((x > 0) ? "west, " : "") <<
-		((x < MAZE_WIDTH - 1) ? "east, " : "") <<
-		((y > 0) ? "north, " : "") <<
-		((y < MAZE_HEIGHT - 1) ? "south, " : "") << "\n";
+		((position.x > 0) ? "west, " : "") <<
+		((position.x < MAZE_WIDTH - 1) ? "east, " : "") <<
+		((position.y > 0) ? "north, " : "") <<
+		((position.y < MAZE_HEIGHT - 1) ? "south, " : "") << "\n";
 }
 
 bool EnableVirtualTerminal()
