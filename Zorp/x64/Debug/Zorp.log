@@ -1,9 +1,8 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(517,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  main.cpp
-C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(23,1): warning C4326: return type of 'main' should be 'int' instead of 'void'
-C:\Users\s250053\Documents\Git\Zorp\Zorp\main.cpp(150,12): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  Room.cpp
-  Generating Code...
-Room.obj : error LNK2005: "char const * const ESC" (?ESC@@3PEBDEB) already defined in main.obj
-Room.obj : error LNK2005: "char const * const CSI" (?CSI@@3PEBDEB) already defined in main.obj
+main.obj : error LNK2005: "char const * const ESC" (?ESC@@3PEBDEB) already defined in Game.obj
+main.obj : error LNK2005: "char const * const CSI" (?CSI@@3PEBDEB) already defined in Game.obj
+Player.obj : error LNK2005: "char const * const ESC" (?ESC@@3PEBDEB) already defined in Game.obj
+Player.obj : error LNK2005: "char const * const CSI" (?CSI@@3PEBDEB) already defined in Game.obj
+Room.obj : error LNK2005: "char const * const ESC" (?ESC@@3PEBDEB) already defined in Game.obj
+Room.obj : error LNK2005: "char const * const CSI" (?CSI@@3PEBDEB) already defined in Game.obj
 C:\Users\s250053\Documents\Git\Zorp\Zorp\x64\Debug\Zorp.exe : fatal error LNK1169: one or more multiply defined symbols found

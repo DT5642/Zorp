@@ -1,8 +1,8 @@
 #pragma once
 
 //Console commands for universal functionality (Windows + Linux)
-const char* ESC = "\x1b";
-const char* CSI = "\x1b[";
+const char* const ESC = "\x1b";
+const char* const CSI = "\x1b[";
 
 const char* const RED = "\x1b[91m";
 const char* const BLUE = "\x1b[94m";

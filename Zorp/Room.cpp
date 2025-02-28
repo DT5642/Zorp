@@ -97,7 +97,7 @@ void Room::DrawDescription()
 		}
 		case ENEMY:
 		{
-			cout << INDENT << "BEWARE. An enemy is approaching.\n";
+			cout << INDENT << RED << "BEWARE." << RESET_COLOR << "An enemy is approaching.\n";
 			break;
 		}
 		case TREASURE:
