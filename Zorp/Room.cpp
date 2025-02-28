@@ -5,11 +5,8 @@
 using std::cout;
 using std::cin;
 
-Room::Room()
+Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }
 {
-	m_type = EMPTY;
-	m_mapPosition.x = 0;
-	m_mapPosition.y = 0;
 }
 
 Room::~Room()

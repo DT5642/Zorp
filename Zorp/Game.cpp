@@ -7,9 +7,8 @@
 using std::cout;
 using std::cin;
 
-Game::Game()
+Game::Game() : m_gameOver{ false }
 {
-	m_gameOver = false;
 }
 
 Game::~Game()

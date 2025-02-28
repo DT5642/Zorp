@@ -3,20 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Game.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Room.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Room.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
@@ -27,16 +19,24 @@
       "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Room.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Room.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Room.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\GameDefines.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\GameDefines.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Point2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Point2D.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\GameDefines.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\GameDefines.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Game.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{939195D3-B73C-4395-A4ED-473E287F5823}|Zorp\\Zorp.vcxproj|solutionrelative:Zorp\\Player.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -46,11 +46,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 2,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 6,
               "Title": "main.cpp",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\main.cpp",
               "RelativeDocumentMoniker": "Zorp\\main.cpp",
@@ -64,7 +64,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 7,
               "Title": "Game.h",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.h",
               "RelativeDocumentMoniker": "Zorp\\Game.h",
@@ -72,25 +72,24 @@
               "RelativeToolTip": "Zorp\\Game.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-02-27T22:06:51.94Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T22:06:51.94Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "Game.cpp",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.cpp",
               "RelativeDocumentMoniker": "Zorp\\Game.cpp",
               "ToolTip": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Game.cpp",
               "RelativeToolTip": "Zorp\\Game.cpp",
-              "ViewState": "AgIAACIAAAAAAAAAAAAAAGUAAAAaAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-27T22:12:42.828Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 8,
               "Title": "Player.h",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.h",
               "RelativeDocumentMoniker": "Zorp\\Player.h",
@@ -98,25 +97,24 @@
               "RelativeToolTip": "Zorp\\Player.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAEAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-02-27T05:31:01.238Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-27T05:31:01.238Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Player.cpp",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.cpp",
               "RelativeDocumentMoniker": "Zorp\\Player.cpp",
               "ToolTip": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Player.cpp",
               "RelativeToolTip": "Zorp\\Player.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAATAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-27T05:33:39.414Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 3,
               "Title": "Room.h",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Room.h",
               "RelativeDocumentMoniker": "Zorp\\Room.h",
@@ -129,20 +127,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 1,
               "Title": "Room.cpp",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Room.cpp",
               "RelativeDocumentMoniker": "Zorp\\Room.cpp",
               "ToolTip": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Room.cpp",
               "RelativeToolTip": "Zorp\\Room.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAHwAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-27T05:03:44.508Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 4,
               "Title": "GameDefines.h",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\GameDefines.h",
               "RelativeDocumentMoniker": "Zorp\\GameDefines.h",
@@ -155,7 +153,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 5,
               "Title": "Point2D.h",
               "DocumentMoniker": "C:\\Users\\s250053\\Documents\\Git\\Zorp\\Zorp\\Point2D.h",
               "RelativeDocumentMoniker": "Zorp\\Point2D.h",
