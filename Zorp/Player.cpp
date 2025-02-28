@@ -5,11 +5,11 @@
 using std::cout;
 using std::cin;
 
-Player::Player() : m_mapPosition{ 0, 0 }
+Player::Player() : m_mapPosition{ 0, 0 }, m_healthPoints{ 100 }, m_attackPoints{ 20 }, m_defendPoints{ 20 }
 {
 }
 
-Player::Player(int x, int y) : m_mapPosition{ x, y }
+Player::Player(int x, int y) : m_mapPosition{ x, y }, m_healthPoints{ 100 }, m_attackPoints{ 20 }, m_defendPoints{ 20 }
 {
 }
 
@@ -39,9 +39,15 @@ void Player::Draw()
 	//Move the cursor to the map pos and delete character at current position
 	cout << CSI << outPos.y << ";" << outPos.x << "H";
 	cout << MAGENTA << "\x81" << RESET_COLOR;
+
+	cout << INVENTORY_OUTPUT_POS;
+	for (auto it = m_powerups.begin(); it < m_powerups.end(); it++)
+	{
+		cout << (*it).GetName() << "\t";
+	}
 }
 
-bool Player::ExecuteCommand(int command)
+bool Player::ExecuteCommand(int command, int roomType)
 {
 	switch (command)
 	{
@@ -77,6 +83,49 @@ bool Player::ExecuteCommand(int command)
 		}
 		return true;
 	}
+	case PICKUP:
+	{
+		return Pickup(roomType);
+	}
 	}
 	return false;
+}
+
+bool Player::Pickup(int roomType)
+{
+	static const char itemNames[15][30] =
+	{
+		"indifference", "invisibility", "invulnerability", "incontinence", "improbability", "impatience", "indecision",
+		"inspiration", "indepedence", "incurability", "integration", "invocation", "inferno", "indigestion", "inoculation"
+	};
+
+	int item = rand() % 15;
+	char name[30] = "";
+
+	switch (roomType)
+	{
+	case TREASURE_HP:
+		strcpy_s(name, "potion of ");
+		break;
+	case TREASURE_AT:
+		strcpy_s(name, "sword of ");
+		break;
+	case TREASURE_DF:
+		strcpy_s(name, "shield of ");
+		break;
+	default:
+		return false;
+	}
+
+	//Appaend the item name to the string
+	strncat_s(name, itemNames[item], 30);
+	cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You pick up the " << name << "\n";
+	m_powerups.push_back(Powerup(name, 1, 1, 1.1f));
+
+	cout << INDENT << "Press 'Enter' to continue.";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin.get();
+
+	return true;
 }

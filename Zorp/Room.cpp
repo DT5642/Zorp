@@ -50,7 +50,9 @@ void Room::Draw()
 			cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
 			break;
 		}
-		case TREASURE:
+		case TREASURE_HP:
+		case TREASURE_AT:
+		case TREASURE_DF:
 		{
 			cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
 			break;
@@ -97,9 +99,11 @@ void Room::DrawDescription()
 			cout << INDENT << RED << "BEWARE." << RESET_COLOR << "An enemy is approaching.\n";
 			break;
 		}
-		case TREASURE:
+		case TREASURE_HP:
+		case TREASURE_AT:
+		case TREASURE_DF:
 		{
-			cout << INDENT << "Your journey has been rewarded. You have found some treasure.\n";
+			cout << INDENT << "There appears to be some treasure here. Perhaps you should investigate futher.\n";
 			break;
 		}
 		case FOOD:
@@ -122,11 +126,20 @@ void Room::DrawDescription()
 
 bool Room::ExecuteCommand(int command)
 {
+	cout << EXTRA_OUTPUT_POS;
 	switch (command)
 	{
 	case LOOK:
 	{
-		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
+		if (m_type == TREASURE_HP || m_type == TREASURE_AT || m_type == TREASURE_DF)
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is some treasure here. It looks small enough to pick up.\n";
+		}
+		else
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
+		}
+
 		cout << INDENT << "Press 'Enter' to continue.";
 		cin.clear();
 		cin.ignore(cin.rdbuf()->in_avail());

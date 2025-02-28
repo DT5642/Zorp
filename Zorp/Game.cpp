@@ -43,7 +43,7 @@ void Game::Update()
 
 	int command = GetCommand();
 
-	if (m_player.ExecuteCommand(command))
+	if (m_player.ExecuteCommand(command, m_map[playerPos.y][playerPos.x].GetType()));
 	{
 		return;
 	}
@@ -111,6 +111,11 @@ void Game::InitializeMap()
 
 			if (type < MAX_RANDOM_TYPE)
 			{
+				if (type == TREASURE)
+				{
+					type = rand() % 3 + TREASURE_HP;
+				}
+
 				m_map[y][x].SetType(type);
 			}
 			else
@@ -174,6 +179,10 @@ int Game::GetCommand()
 
 	//Clear any existing text
 	cout << CSI << "4M";
+
+	//Insert 4 blank lines to ensure the inventory output remains correct
+	cout << CSI << "4L";
+
 	cout << INDENT << "Enter a command.";
 	
 	//Move cursor to position for player to enter input
@@ -187,6 +196,7 @@ int Game::GetCommand()
 	cout << RESET_COLOR;
 
 	bool bMove = false;
+	bool bPickup = false;
 
 	while (input)
 	{
@@ -220,6 +230,17 @@ int Game::GetCommand()
 		if (strcmp(input, "fight") == 0)
 		{
 			return FIGHT;
+		}
+		if (strcmp(input, "pick") == 0)
+		{
+			bPickup = true;
+		}
+		else if (bPickup == true)
+		{
+			if (strcmp(input, "up") == 0)
+			{
+				return PICKUP;
+			}
 		}
 
 		char next = cin.peek();
