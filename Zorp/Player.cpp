@@ -122,7 +122,8 @@ bool Player::Pickup(int roomType)
 	cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You pick up the " << name << "\n";
 	m_powerups.push_back(Powerup(name, 1, 1, 1.1f));
 
-	std::sort (m_powerups.begin(), m_powerups.end(), Powerup::compare);
+	Powerup p1, p2;
+	Powerup::Compare(p1, p2);
 
 	cout << INDENT << "Press 'Enter' to continue.";
 	cin.clear();
