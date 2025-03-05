@@ -3,6 +3,7 @@
 class Powerup
 {
 public:
+	Powerup();
 	Powerup(const char name[30], float health, float attack, float defence);
 	~Powerup();
 
@@ -10,6 +11,11 @@ public:
 	float GetHealthMultiplier();
 	float GetAttackMultiplier();
 	float GetDefenceMultiplier();
+
+	void SetName(const char* pStr);
+	void SetHealthMultiplier(float health);
+	void SetAttackMultiplier(float attack);
+	void SetDefenceMultiplier(float defence);
 
 	static bool Compare(const Powerup* p1, const Powerup* p2);
 

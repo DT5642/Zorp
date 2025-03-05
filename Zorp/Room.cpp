@@ -1,28 +1,19 @@
 #include "Room.h"
-#include "GameDefines.h"
-#include "Powerup.h"
+#include "Food.h"
 #include "Player.h"
+#include "Powerup.h"
+#include "GameDefines.h"
 #include <iostream>
 
 using std::cout;
 using std::cin;
 
-static const char itemNames[15][30] =
-{
-	"indifference", "invisibility", "invulnerability", "incontinence", "improbability", "impatience", "indecision",
-	"inspiration", "indepedence", "incurability", "integration", "invocation", "inferno", "indigestion", "inoculation"
-};
-
-Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }, m_powerup{ nullptr}
+Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }, m_powerup{ nullptr }, m_enemy{ nullptr }, m_food{ nullptr }
 {
 }
 
 Room::~Room()
 {
-	if (m_powerup != nullptr)
-	{
-		delete m_powerup;
-	}
 }
 
 void Room::SetPosition(Point2D position)
@@ -33,46 +24,41 @@ void Room::SetPosition(Point2D position)
 void Room::SetType(int type)
 {
 	m_type = type;
+}
 
-	if (!(m_type == TREASURE_HP || m_type == TREASURE_AT || m_type == TREASURE_DF))
-	{
-		return;
-	}
-	if (m_powerup != nullptr)
-	{
-		return;
-	}
+void Room::SetEnemy(Enemy* pEnemy)
+{
+	m_enemy = pEnemy;
+}
 
-	int item = rand() % 15;
-	char name[30] = "";
+void Room::SetPowerup(Powerup* pPowerup)
+{
+	m_powerup = pPowerup;
+}
 
-	float HP = 1;
-	float AT = 1;
-	float DF = 1;
-
-	switch (type)
-	{
-	case TREASURE_HP:
-		strcpy_s(name, "potion of ");
-		HP = 1.1f;
-		break;
-	case TREASURE_AT:
-		strcpy_s(name, "sword of ");
-		AT = 1.1f;
-		break;
-	case TREASURE_DF:
-		strcpy_s(name, "shield of ");
-		DF = 1.1f;
-		break;
-	}
-
-	strncat(name, itemNames[item], 30);
-	m_powerup = new Powerup(name, HP, AT, DF);
+void Room::SetFood(Food* pFood)
+{
+	m_food = pFood;
 }
 
 int Room::GetType()
 {
 	return m_type;
+}
+
+Enemy* Room::GetEnemy()
+{
+	return m_enemy;
+}
+
+Powerup* Room::GetPowerup()
+{
+	return m_powerup;
+}
+
+Food* Room::GetFood()
+{
+	return m_food;
 }
 
 void Room::Draw()
@@ -89,24 +75,23 @@ void Room::Draw()
 	{
 		case EMPTY:
 		{
+			if (m_enemy != nullptr)
+			{
+				cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
+				break;
+			}
+			if (m_powerup != nullptr)
+			{
+				cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
+				break;
+			}
+			if (m_food != nullptr)
+			{
+				cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
+				break;
+			}
+
 			cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
-			break;
-		}
-		case ENEMY:
-		{
-			cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
-			break;
-		}
-		case TREASURE_HP:
-		case TREASURE_AT:
-		case TREASURE_DF:
-		{
-			cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
-			break;
-		}
-		case FOOD:
-		{
-			cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
 			break;
 		}
 		case ENTRANCE:
@@ -138,24 +123,23 @@ void Room::DrawDescription()
 	{
 		case EMPTY:
 		{
+			if (m_enemy != nullptr)
+			{
+				cout << INDENT << RED << "BEWARE." << RESET_COLOR << "An enemy is approaching.\n";
+				break;
+			}
+			if (m_powerup != nullptr)
+			{
+				cout << INDENT << "There appears to be some treasure here. Perhaps you should investigate futher.\n";
+				break;
+			}
+			if (m_food != nullptr)
+			{
+				cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
+				break;
+			}
+
 			cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
-			break;
-		}
-		case ENEMY:
-		{
-			cout << INDENT << RED << "BEWARE." << RESET_COLOR << "An enemy is approaching.\n";
-			break;
-		}
-		case TREASURE_HP:
-		case TREASURE_AT:
-		case TREASURE_DF:
-		{
-			cout << INDENT << "There appears to be some treasure here. Perhaps you should investigate futher.\n";
-			break;
-		}
-		case FOOD:
-		{
-			cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
 			break;
 		}
 		case ENTRANCE:
@@ -169,81 +153,4 @@ void Room::DrawDescription()
 			break;
 		}
 	}
-}
-
-bool Room::ExecuteCommand(int command, Player* pPlayer)
-{
-	cout << EXTRA_OUTPUT_POS;
-	switch (command)
-	{
-	case LOOK:
-	{
-		if (m_type == TREASURE_HP || m_type == TREASURE_AT || m_type == TREASURE_DF)
-		{
-			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is some treasure here. It looks small enough to pick up.\n";
-		}
-		else
-		{
-			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
-		}
-
-		cout << INDENT << "Press 'Enter' to continue.";
-		cin.clear();
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin.get();
-		return true;
-	}
-	case FIGHT:
-	{
-		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
-		cout << INDENT << "Press 'Enter' to continue";
-		cin.clear();
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin.get();
-		return true;
-	}
-	case PICKUP:
-	{
-		return Pickup(pPlayer);
-	}
-	default:
-	{
-		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
-		cout << INDENT << "Press 'Enter' to continue.";
-		cin.clear();
-		cin.ignore(cin.rdbuf()->in_avail());
-		cin.get();
-		break;
-	}
-	}
-	return false;
-}
-
-bool Room::Pickup(Player* pPlayer)
-{
-	if (m_powerup == nullptr)
-	{
-		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is nothing here to pick up.\n";
-
-		return true;
-	}
-
-	cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You pick up the " << m_powerup->GetName() << "\n";
-
-	//Add the powerup to the player's inventory 
-	pPlayer->AddPowerup(m_powerup);
-
-	//Remove the powerup from the room
-	//(But don't delete it, the player owns it now)
-	m_powerup = nullptr;
-
-	//Change this room type to empty
-	m_type = EMPTY;
-
-	cout << INDENT << "Press 'Enter' to continue.";
-	cin.clear();
-	cin.ignore(cin.rdbuf()->in_avail());
-	cin.get();
-
-	return true;
 }

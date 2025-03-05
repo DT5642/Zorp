@@ -1,8 +1,11 @@
 #include "Game.h"
-#include <iostream>
-#include <random>
-#include <Windows.h>
 #include <time.h>
+#include <random>
+#include <iostream>
+#include <Windows.h>
+#include "Enemy.h"
+#include "Food.h"
+#include "Powerup.h"
 
 using std::cout;
 using std::cin;
@@ -13,6 +16,9 @@ Game::Game() : m_gameOver{ false }
 
 Game::~Game()
 {
+	delete[] m_powerups;
+	delete[] m_enemies;
+	delete[] m_food;
 }
 
 bool Game::Startup()
@@ -24,8 +30,13 @@ bool Game::Startup()
 		cin.get();
 		return false;
 	}
+	srand(time(nullptr));
 
-	InitializeMap();
+	InitialiseMap();
+	InitialiseEnemies();
+	InitialisePowerups();
+	InitialiseFood();
+
 	m_player.SetPosition(Point2D{ 0, 0 });
 	DrawWelcomMessage();
 	return true;
@@ -49,12 +60,16 @@ void Game::Update()
 		return;
 	}
 
-	if (m_player.ExecuteCommand(command));
-	{
-		return;
-	}
+	m_player.ExecuteCommand(command, &m_map[playerPos.y][playerPos.x]);
 
-	m_map[playerPos.y][playerPos.x].ExecuteCommand(command, &m_player);
+	for (int i = 0; i < m_enemyCount; i++)
+	{
+		if (m_enemies[i].IsAlive() == false)
+		{
+			Point2D pos = m_enemies[i].GetPosition();
+			m_map[pos.y][pos.x].SetEnemy(nullptr);
+		}
+	}
 }
 
 void Game::Draw()
@@ -104,36 +119,99 @@ bool Game::EnableVirtualTerminal()
 	return true;
 }
 
-void Game::InitializeMap()
+void Game::InitialiseMap()
 {
-	srand(time(nullptr));
-
-	//Fill the arrays with random room types
+	//Set room positions
 	for (int y = 0; y < MAZE_HEIGHT; y++)
 	{
 		for (int x = 0; x < MAZE_WIDTH; x++)
 		{
-			int type = rand() % (MAX_RANDOM_TYPE * 2);
-
-			if (type < MAX_RANDOM_TYPE)
-			{
-				if (type == TREASURE)
-				{
-					type = rand() % 3 + TREASURE_HP;
-				}
-
-				m_map[y][x].SetType(type);
-			}
-			else
-			{
-				m_map[y][x].SetType(EMPTY);
-			}
 			m_map[y][x].SetPosition(Point2D{ x, y });
 		}
 	}
-	//Set the rntrance and exit of the maze
+
+	//Set the entrance and exit of the mase
 	m_map[0][0].SetType(ENTRANCE);
 	m_map[MAZE_HEIGHT - 1][MAZE_WIDTH - 1].SetType(EXIT);
+}
+
+void Game::InitialiseEnemies()
+{
+	//Create a dynamic array of enemies
+	//(The number of enemies will change every game)
+	m_enemyCount = 1 + rand() % 4;
+	m_enemies = new Enemy[m_enemyCount];
+
+	//Randomly place the enemies in the rooms on the map
+	for (int i = 0; i < m_enemyCount; i++)
+	{
+		//A bit of math ensures the enemies wont spawn directly on or next to the entrance
+		int x = 2 + (rand() % (MAZE_WIDTH - 3));
+		int y = 2 + (rand() % (MAZE_HEIGHT - 3));
+
+		m_enemies[i].SetPosition(Point2D{ x, y });
+		m_map[y][x].SetEnemy(&m_enemies[i]);
+	}
+}
+
+void Game::InitialisePowerups()
+{
+	//Create some powerups
+	m_powerupCount = 3;
+	m_powerups = new Powerup[m_powerupCount];
+
+	//Randomly place the food in the map
+	for (int i = 0; i < m_powerupCount; i++)
+	{
+		char name[30] = "";
+		int x = rand() % (MAZE_WIDTH - 1);
+		int y = rand() % (MAZE_HEIGHT - 1);
+
+		float HP = 1;
+		float AT = 1;
+		float DF = 1;
+
+		switch (i)
+		{
+		case 0:
+		{
+			strcpy_s(name, "potion of ");
+			m_powerups[i].SetHealthMultiplier(1.1f);
+			break;
+		}
+		case 1:
+		{
+			strcpy_s(name, "sword of ");
+			m_powerups[i].SetAttackMultiplier(1.1f);
+			break;
+		}
+		case 2:
+		{
+			strcpy_s(name, "shield of ");
+			m_powerups[i].SetDefenceMulitplier(1.1f);
+			break;
+		}
+		}
+
+		strncat_s(name, itemNames[(rand() % 15)], 30);
+		m_powerups[i].SetName(name);
+		m_map[y][x].SetPowerup(&m_powerups[i]);
+	}
+}
+
+void Game::InitialiseFood()
+{
+	//Create some food
+	m_foodCount = 3;
+	m_food = new Food[m_foodCount];
+	
+	//Randomly place the food in the map
+	for (int i = 0; i < m_foodCount; i++)
+	{
+		int x = rand() % (MAZE_WIDTH - 1);
+		int y = rand() % (MAZE_HEIGHT - 1);
+		m_map[y][x].SetFood(&m_food[i]);
+	}
 }
 
 void Game::DrawWelcomMessage()
@@ -184,10 +262,10 @@ int Game::GetCommand()
 	cout << CSI << PLAYER_INPUT_Y << ";" << 0 << "H";
 
 	//Clear any existing text
-	cout << CSI << "4M";
+	cout << CSI << "5M";
 
-	//Insert 4 blank lines to ensure the inventory output remains correct
-	cout << CSI << "4L";
+	//Insert 5 blank lines to ensure the inventory output remains correct
+	cout << CSI << "5L";
 
 	cout << INDENT << "Enter a command.";
 	

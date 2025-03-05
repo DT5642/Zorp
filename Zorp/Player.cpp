@@ -1,6 +1,9 @@
+#include "Room.h"
+#include "Food.h"
+#include "Enemy.h"
 #include "Player.h"
-#include "GameDefines.h"
 #include "Powerup.h"
+#include "GameDefines.h"
 #include <iostream>
 #include <algorithm>
 
@@ -17,11 +20,6 @@ Player::Player(int x, int y) : m_mapPosition{ x, y }, m_healthPoints{ 100 }, m_a
 
 Player::~Player()
 {
-	for (auto it = m_powerups.begin(); it != m_powerups.end(); it++)
-	{
-		delete* it;
-	}
-	m_powerups.clear();
 }
 
 void Player::AddPowerup(Powerup* pPowerup)
@@ -31,7 +29,7 @@ void Player::AddPowerup(Powerup* pPowerup)
 	std::sort(m_powerups.begin(), m_powerups.end(), Powerup::Compare);
 }
 
-void Player::SetPosition(Point2D position)
+void Player::SetPosition(const Point2D& position)
 {
 	m_mapPosition = position;
 }
@@ -39,6 +37,85 @@ void Player::SetPosition(Point2D position)
 Point2D Player::GetPosition()
 {
 	return m_mapPosition;
+}
+
+void Player::ExecuteCommand(int command, Room* pRoom)
+{
+	switch (command)
+	{
+	case EAST:
+	{
+		if (m_mapPosition.x < MAZE_WIDTH - 1)
+		{
+			m_mapPosition.x++;
+		}
+		return;
+	}
+	case WEST:
+	{
+		if (m_mapPosition.x > 0)
+		{
+			m_mapPosition.x--;
+		}
+		return;
+	}
+	case NORTH:
+	{
+		if (m_mapPosition.y > 0)
+		{
+			m_mapPosition.y--;
+		}
+		return;
+	}
+	case SOUTH:
+	{
+		if (m_mapPosition.y < MAZE_HEIGHT - 1)
+		{
+			m_mapPosition.y++;
+		}
+		return;
+	}
+	case LOOK:
+	{
+		if (pRoom->GetEnemy() != nullptr)
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "LOOK OUT! An enemey is approaching.\n";
+		}
+		else if (pRoom->GetPowerup() != nullptr)
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is some treasure here. It looks small enough to pick up.\n";
+		}
+		else if (pRoom->GetFood() != nullptr)
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is some food here. It should be edible.\n";
+		}
+		else
+		{
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
+		}
+		break;
+	}
+	case FIGHT:
+	{
+		Attack(pRoom->GetEnemy());
+		break;
+	}
+	case PICKUP:
+	{
+		Pickup(pRoom);
+		break;
+	}
+	default:
+	{
+		//The direction was not valid, do nothing, go back to the top of the loop and ask again
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
+	}
+	}
+
+	cout << INDENT << "Press 'Enter' to continue.";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin.get();
 }
 
 void Player::Draw()
@@ -55,48 +132,56 @@ void Player::Draw()
 	cout << MAGENTA << "\x81" << RESET_COLOR;
 
 	cout << INVENTORY_OUTPUT_POS;
-	for (auto it = m_powerups.begin(); it < m_powerups.end(); it++)
-	{
-		cout << (*it).GetName() << "\t";
+	for (auto it = m_powerups.begin(); it < m_powerups.end(); it++) {
+		cout << (*it)->GetName() << "\t";
 	}
 }
 
-bool Player::ExecuteCommand(int command)
+void Player::Pickup(Room* pRoom)
 {
-	switch (command)
+	if (pRoom->GetPowerup() != nullptr)
 	{
-	case EAST:
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You pick up the " << pRoom->GetPowerup()->GetName() << "\n";
+		//Add the powerup to the player's inventory
+		AddPowerup(pRoom->GetPowerup());
+		//Remove the powerup from the room (but don't delete it, the player owns it now)
+		pRoom->SetPowerup(nullptr);
+	}
+	else if (pRoom->GetFood() != nullptr)
 	{
-		if (m_mapPosition.x < MAZE_WIDTH - 1)
+		//Eat the food
+		m_healthPoints += pRoom->GetFood()->GetHP();
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You feel refreshed. Your health is now " << m_healthPoints << "\n";
+		//Remove the food from the room
+		pRoom->SetFood(nullptr);
+	}
+	else
+	{
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is no one here you can fight with.\n";
+	}
+}
+
+void Player::Attack(Enemy* pEnemy)
+{
+	if (pEnemy == nullptr)
+	{
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is no one here you can fight with.\n";
+	}
+	else
+	{
+		pEnemy->OnAttacked(m_attackPoints);
+
+		if (pEnemy->IsAlive() == false)
 		{
-			m_mapPosition.x++;
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You fight a grue adn kill it.\n";
 		}
-		return true;
-	}
-	case WEST:
-	{
-		if (m_mapPosition.x > 0)
+		else
 		{
-			m_mapPosition.x--;
+			int damage = pEnemy->GetAT() - m_defendPoints;
+			m_healthPoints -= damage;
+
+			cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You fight a grue and take " << damage << " points damage. Your health is now at " << m_healthPoints << "\n";
+			cout << INDENT << "The grue has " << pEnemy->GetHP() << " health remainging.\n";
 		}
-		return true;
 	}
-	case NORTH:
-	{
-		if (m_mapPosition.y > 0)
-		{
-			m_mapPosition.y--;
-		}
-		return true;
-	}
-	case SOUTH:
-	{
-		if (m_mapPosition.y < MAZE_HEIGHT - 1)
-		{
-			m_mapPosition.y++;
-		}
-		return true;
-	}
-	}
-	return false;
 }

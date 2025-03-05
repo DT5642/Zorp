@@ -3,6 +3,8 @@
 
 class Powerup;
 class Player;
+class Enemy;
+class Food;
 
 class Room
 {
@@ -12,20 +14,23 @@ public:
 
 	void SetPosition(Point2D position);
 	void SetType(int type);
+	void SetEnemy(Enemy* pEnemy);
+	void SetPowerup(Powerup* pPowerup);
+	void SetFood(Food* pFood);
 
 	int GetType();
+	Enemy* GetEnemy();
+	Powerup* GetPowerup();
+	Food* GetFood();
 
 	void Draw();
 	void DrawDescription();
-
-	bool ExecuteCommand(int command, Player* pPlayer);
-
-private:
-	bool Pickup(Player* pPlayer);
 
 private:
 	Point2D m_mapPosition;
 	int m_type;
 
 	Powerup* m_powerup;
+	Enemy* m_enemy;
+	Food* m_food;
 };
