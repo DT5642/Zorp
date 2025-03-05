@@ -43,12 +43,18 @@ void Game::Update()
 
 	int command = GetCommand();
 
-	if (m_player.ExecuteCommand(command, m_map[playerPos.y][playerPos.x].GetType()));
+	if (command == QUIT)
+	{
+		m_gameOver = true;
+		return;
+	}
+
+	if (m_player.ExecuteCommand(command));
 	{
 		return;
 	}
 
-	m_map[playerPos.y][playerPos.x].ExecuteCommand(command);
+	m_map[playerPos.y][playerPos.x].ExecuteCommand(command, &m_player);
 }
 
 void Game::Draw()
@@ -230,6 +236,10 @@ int Game::GetCommand()
 		if (strcmp(input, "fight") == 0)
 		{
 			return FIGHT;
+		}
+		if (strcmp(input, "exit") == 0)
+		{
+			return QUIT;
 		}
 		if (strcmp(input, "pick") == 0)
 		{

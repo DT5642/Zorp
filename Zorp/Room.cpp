@@ -1,16 +1,28 @@
 #include "Room.h"
 #include "GameDefines.h"
+#include "Powerup.h"
+#include "Player.h"
 #include <iostream>
 
 using std::cout;
 using std::cin;
 
-Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }
+static const char itemNames[15][30] =
+{
+	"indifference", "invisibility", "invulnerability", "incontinence", "improbability", "impatience", "indecision",
+	"inspiration", "indepedence", "incurability", "integration", "invocation", "inferno", "indigestion", "inoculation"
+};
+
+Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }, m_powerup{ nullptr}
 {
 }
 
 Room::~Room()
 {
+	if (m_powerup != nullptr)
+	{
+		delete m_powerup;
+	}
 }
 
 void Room::SetPosition(Point2D position)
@@ -21,6 +33,41 @@ void Room::SetPosition(Point2D position)
 void Room::SetType(int type)
 {
 	m_type = type;
+
+	if (!(m_type == TREASURE_HP || m_type == TREASURE_AT || m_type == TREASURE_DF))
+	{
+		return;
+	}
+	if (m_powerup != nullptr)
+	{
+		return;
+	}
+
+	int item = rand() % 15;
+	char name[30] = "";
+
+	float HP = 1;
+	float AT = 1;
+	float DF = 1;
+
+	switch (type)
+	{
+	case TREASURE_HP:
+		strcpy_s(name, "potion of ");
+		HP = 1.1f;
+		break;
+	case TREASURE_AT:
+		strcpy_s(name, "sword of ");
+		AT = 1.1f;
+		break;
+	case TREASURE_DF:
+		strcpy_s(name, "shield of ");
+		DF = 1.1f;
+		break;
+	}
+
+	strncat(name, itemNames[item], 30);
+	m_powerup = new Powerup(name, HP, AT, DF);
 }
 
 int Room::GetType()
@@ -124,7 +171,7 @@ void Room::DrawDescription()
 	}
 }
 
-bool Room::ExecuteCommand(int command)
+bool Room::ExecuteCommand(int command, Player* pPlayer)
 {
 	cout << EXTRA_OUTPUT_POS;
 	switch (command)
@@ -155,6 +202,10 @@ bool Room::ExecuteCommand(int command)
 		cin.get();
 		return true;
 	}
+	case PICKUP:
+	{
+		return Pickup(pPlayer);
+	}
 	default:
 	{
 		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You try, but you just can't do it.\n";
@@ -166,4 +217,33 @@ bool Room::ExecuteCommand(int command)
 	}
 	}
 	return false;
+}
+
+bool Room::Pickup(Player* pPlayer)
+{
+	if (m_powerup == nullptr)
+	{
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "There is nothing here to pick up.\n";
+
+		return true;
+	}
+
+	cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You pick up the " << m_powerup->GetName() << "\n";
+
+	//Add the powerup to the player's inventory 
+	pPlayer->AddPowerup(m_powerup);
+
+	//Remove the powerup from the room
+	//(But don't delete it, the player owns it now)
+	m_powerup = nullptr;
+
+	//Change this room type to empty
+	m_type = EMPTY;
+
+	cout << INDENT << "Press 'Enter' to continue.";
+	cin.clear();
+	cin.ignore(cin.rdbuf()->in_avail());
+	cin.get();
+
+	return true;
 }

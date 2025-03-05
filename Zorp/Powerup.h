@@ -11,7 +11,7 @@ public:
 	float GetAttackMultiplier();
 	float GetDefenceMultiplier();
 
-	static bool Compare(const Powerup& p1, const Powerup& p2);
+	static bool Compare(const Powerup* p1, const Powerup* p2);
 
 private:
 	char m_name[30];

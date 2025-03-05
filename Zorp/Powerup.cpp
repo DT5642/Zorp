@@ -2,7 +2,6 @@
 #include <string.h>
 
 Powerup::Powerup(const char name[30], float health, float attack, float defence)
-	: m_healthMultiplier( health ), m_attackMultiplier ( attack ), m_defenceMultiplier (defence)
 {
 }
 
@@ -30,7 +29,7 @@ float Powerup::GetDefenceMultiplier()
 	return 0.0f;
 }
 
-bool Powerup::Compare(const Powerup& p1, const Powerup& p2)
+bool Powerup::Compare(const Powerup* p1, const Powerup* p2)
 {
-	return (strcmp(p1.m_name, p2.m_name) < 0) ? true : false;
+	return (strcmp(p1->m_name, p2->m_name) < 0) ? true : false;
 }

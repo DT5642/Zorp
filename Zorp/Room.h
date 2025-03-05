@@ -1,6 +1,9 @@
 #pragma once
 #include "Point2D.h"
 
+class Powerup;
+class Player;
+
 class Room
 {
 public:
@@ -15,9 +18,14 @@ public:
 	void Draw();
 	void DrawDescription();
 
-	bool ExecuteCommand(int command);
+	bool ExecuteCommand(int command, Player* pPlayer);
+
+private:
+	bool Pickup(Player* pPlayer);
 
 private:
 	Point2D m_mapPosition;
 	int m_type;
+
+	Powerup* m_powerup;
 };
