@@ -1,5 +1,6 @@
 #include "Powerup.h"
 #include "GameDefines.h"
+#include <fstream>
 #include <string.h>
 #include <iostream>
 
@@ -40,6 +41,22 @@ float Powerup::GetAttackMultiplier()
 float Powerup::GetDefenceMultiplier()
 {
 	return 0.0f;
+}
+
+void Powerup::Save(std::ofstream& out)
+{
+	if (!out.is_open)
+	{
+		return;
+	}
+
+	out << m_priority << ",";
+	out << m_mapPosition.x << ",";
+	out << m_mapPosition.y << ",";
+	out << m_name << ",";
+	out << m_healthMultiplier << ",";
+	out << m_attackMultiplier << ",";
+	out << m_defenceMultiplier << "\n";
 }
 
 void Powerup::SetName(const char* pStr)

@@ -41,6 +41,8 @@ void Room::RemoveGameObject(GameObject* object)
 	{
 		if (*it == object)
 		{
+			//Reset the object's room number
+			(*it)->SetPosition(Point2D{ -1, -1 });
 			m_objects.erase(it);
 			return;
 		}

@@ -47,7 +47,10 @@ const int NORTH = 8;
 const int LOOK = 9;
 const int FIGHT = 10;
 const int PICKUP = 11;
+
 const int QUIT = 12;
+const int SAVE = 13;
+const int LOAD = 14;
 
 static const char itemNames[15][30] =
 {

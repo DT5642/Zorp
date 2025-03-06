@@ -74,6 +74,16 @@ void Player::ExecuteCommand(int command, Room* pRoom)
 		Pickup(pRoom);
 		break;
 	}
+	case SAVE:
+	{
+
+	}
+	case LOAD:
+	{
+		//Handle by the system before we get here.
+		//No need to process these commands
+		break;
+	}
 	default:
 	{
 		//The direction was not valid, do nothing, go back to the top of the loop and ask again

@@ -1,5 +1,6 @@
 #include "Food.h"
 #include "GameDefines.h"
+#include <fstream>
 #include <iostream>
 
 using std::cout;
@@ -22,6 +23,19 @@ Food::~Food()
 int Food::GetHP()
 {
 	return m_healthPoints;
+}
+
+void Food::Save(std::ofstream& out)
+{
+	if (!out.is_open())
+	{
+		return;
+	}
+
+	out << m_priority << ",";
+	out << m_mapPosition.x << ",";
+	out << m_mapPosition.y << ",";
+	out << m_healthPoints << "\n";
 }
 
 void Food::Draw()

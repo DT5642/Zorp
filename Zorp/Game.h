@@ -17,6 +17,8 @@ public:
 	bool Startup();
 	void Update();
 	void Draw();
+	void Save();
+	bool Load();
 
 	bool IsGameOver();
 
@@ -45,6 +47,10 @@ private:
 
 	int m_powerupCount;
 	Powerup* m_powerups;
+
+	//A place to store temporary powerups during loading
+	int m_tempPowerupCount;
+	Powerup* m_tempPowerups;
 
 	Player m_player;
 };
