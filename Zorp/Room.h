@@ -1,10 +1,11 @@
 #pragma once
 #include "Point2D.h"
+#include <vector>
 
-class Powerup;
-class Player;
-class Enemy;
 class Food;
+class Enemy;
+class Powerup;
+class GameObject;
 
 class Room
 {
@@ -14,21 +15,23 @@ public:
 
 	void SetPosition(Point2D position);
 	void SetType(int type);
-	void SetEnemy(Enemy* pEnemy);
-	void SetPowerup(Powerup* pPowerup);
-	void SetFood(Food* pFood);
 
+	void AddGameObject(GameObject* object);
+	void RemoveGameObject(GameObject* object);
 	int GetType();
+	void Draw();
+	void DrawDescription();
+	void LookAt();
+
 	Enemy* GetEnemy();
 	Powerup* GetPowerup();
 	Food* GetFood();
 
-	void Draw();
-	void DrawDescription();
-
 private:
 	Point2D m_mapPosition;
 	int m_type;
+
+	std::vector<GameObject*>m_objects;
 
 	Powerup* m_powerup;
 	Enemy* m_enemy;

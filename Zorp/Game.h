@@ -3,8 +3,8 @@
 #include "Player.h"
 #include "GameDefines.h"
 
-class Enemy;
 class Food;
+class Enemy;
 class Powerup;
 
 class Game

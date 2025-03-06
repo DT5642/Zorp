@@ -31,6 +31,13 @@ const int MAP_Y = 12;
 const int PLAYER_INPUT_X = 30;
 const int PLAYER_INPUT_Y = 19;
 
+//Priorities
+const int PRIORITY_DEFAULT = 5;
+const int PRIORITY_PLAYER = 0;
+const int PRIORITY_ENEMY = 1;
+const int PRIORITY_POWERUP = 2;
+const int PRIORITY_FOOD = 3;
+
 //Input commands
 const int SOUTH = 2;
 const int WEST = 4;

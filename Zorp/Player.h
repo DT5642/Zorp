@@ -1,25 +1,22 @@
 #pragma once
-#include "Point2D.h"
+#include "Character.h"
 #include <vector>
 
 class Room;
 class Enemy;
 class Powerup;
 
-class Player
+class Player : public Character
 {
 public:
 	Player();
 	Player(int x, int y);
 	~Player();
 
-	void AddPowerup(Powerup* pPowerup);
-	void SetPosition(const Point2D& position);
-
-	Point2D GetPosition();
-
 	void ExecuteCommand(int command, Room* pRoom);
-	void Draw();
+	void Draw() override;
+	void DrawDescription() override;
+	void LookAt() override;
 
 private:
 	void Pickup(Room* pRoom);

@@ -67,7 +67,7 @@ void Game::Update()
 		if (m_enemies[i].IsAlive() == false)
 		{
 			Point2D pos = m_enemies[i].GetPosition();
-			m_map[pos.y][pos.x].SetEnemy(nullptr);
+			m_map[pos.y][pos.x].RemoveGameObject(&m_enemies[i]);
 		}
 	}
 }
@@ -150,7 +150,7 @@ void Game::InitialiseEnemies()
 		int y = 2 + (rand() % (MAZE_HEIGHT - 3));
 
 		m_enemies[i].SetPosition(Point2D{ x, y });
-		m_map[y][x].SetEnemy(&m_enemies[i]);
+		m_map[y][x].AddGameObject(&m_enemies[i]);
 	}
 }
 
@@ -188,14 +188,14 @@ void Game::InitialisePowerups()
 		case 2:
 		{
 			strcpy_s(name, "shield of ");
-			m_powerups[i].SetDefenceMulitplier(1.1f);
+			m_powerups[i].SetDefenceMultiplier(1.1f);
 			break;
 		}
 		}
 
 		strncat_s(name, itemNames[(rand() % 15)], 30);
 		m_powerups[i].SetName(name);
-		m_map[y][x].SetPowerup(&m_powerups[i]);
+		m_map[y][x].AddGameObject(&m_powerups[i]);
 	}
 }
 
@@ -210,7 +210,7 @@ void Game::InitialiseFood()
 	{
 		int x = rand() % (MAZE_WIDTH - 1);
 		int y = rand() % (MAZE_HEIGHT - 1);
-		m_map[y][x].SetFood(&m_food[i]);
+		m_map[y][x].AddGameObject(&m_food[i]);
 	}
 }
 

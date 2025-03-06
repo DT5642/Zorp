@@ -1,9 +1,12 @@
 #include "Room.h"
 #include "Food.h"
+#include "Enemy.h"
 #include "Player.h"
 #include "Powerup.h"
+#include "GameObject.h"
 #include "GameDefines.h"
 #include <iostream>
+#include <algorithm>
 
 using std::cout;
 using std::cin;
@@ -26,39 +29,27 @@ void Room::SetType(int type)
 	m_type = type;
 }
 
-void Room::SetEnemy(Enemy* pEnemy)
+void Room::AddGameObject(GameObject* object)
 {
-	m_enemy = pEnemy;
+	m_objects.push_back(object);
+	std::sort(m_objects.begin(), m_objects.end(), GameObject::Compare);
 }
 
-void Room::SetPowerup(Powerup* pPowerup)
+void Room::RemoveGameObject(GameObject* object)
 {
-	m_powerup = pPowerup;
-}
-
-void Room::SetFood(Food* pFood)
-{
-	m_food = pFood;
+	for (auto it = m_objects.begin(); it != m_objects.end(); it++)
+	{
+		if (*it == object)
+		{
+			m_objects.erase(it);
+			return;
+		}
+	}
 }
 
 int Room::GetType()
 {
 	return m_type;
-}
-
-Enemy* Room::GetEnemy()
-{
-	return m_enemy;
-}
-
-Powerup* Room::GetPowerup()
-{
-	return m_powerup;
-}
-
-Food* Room::GetFood()
-{
-	return m_food;
 }
 
 void Room::Draw()
@@ -75,23 +66,14 @@ void Room::Draw()
 	{
 		case EMPTY:
 		{
-			if (m_enemy != nullptr)
+			if (m_objects.size() > 0)
 			{
-				cout << "[ " << RED << "\x94" << RESET_COLOR << " ] ";
-				break;
+				m_objects[0]->Draw();
 			}
-			if (m_powerup != nullptr)
+			else
 			{
-				cout << "[ " << YELLOW << "$" << RESET_COLOR << " ] ";
-				break;
+				cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
 			}
-			if (m_food != nullptr)
-			{
-				cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
-				break;
-			}
-
-			cout << "[ " << GREEN << "\xb0" << RESET_COLOR << " ] ";
 			break;
 		}
 		case ENTRANCE:
@@ -123,23 +105,15 @@ void Room::DrawDescription()
 	{
 		case EMPTY:
 		{
-			if (m_enemy != nullptr)
+			if (m_objects.size() > 0)
 			{
-				cout << INDENT << RED << "BEWARE." << RESET_COLOR << "An enemy is approaching.\n";
-				break;
+				m_objects[0]->DrawDescription();
 			}
-			if (m_powerup != nullptr)
+			else
 			{
-				cout << INDENT << "There appears to be some treasure here. Perhaps you should investigate futher.\n";
-				break;
-			}
-			if (m_food != nullptr)
-			{
-				cout << INDENT << "At last! You collect some food to sustain you on your journey.\n";
-				break;
+				cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
 			}
 
-			cout << INDENT << "You are in an empty meadow. There is nothing of note here.\n";
 			break;
 		}
 		case ENTRANCE:
@@ -153,4 +127,61 @@ void Room::DrawDescription()
 			break;
 		}
 	}
+}
+
+void Room::LookAt()
+{
+	if (m_objects.size() > 0)
+	{
+		m_objects[0]->LookAt();
+	}
+	else
+	{
+		cout << EXTRA_OUTPUT_POS << RESET_COLOR << "You look around, but see nothing worth mentioning\n";
+	}
+}
+
+Enemy* Room::GetEnemy()
+{
+	for (GameObject* pObj : m_objects)
+	{
+		Enemy* enemy = dynamic_cast<Enemy*>(pObj);
+
+		if (enemy != nullptr)
+		{
+			return enemy;
+		}
+	}
+
+	return nullptr;
+}
+
+Powerup* Room::GetPowerup()
+{
+	for (GameObject* pObj : m_objects)
+	{
+		Powerup* powerup = dynamic_cast<Powerup*>(pObj);
+
+		if (powerup != nullptr)
+		{
+			return powerup;
+		}
+	}
+
+	return nullptr;
+}
+
+Food* Room::GetFood()
+{
+	for (GameObject* pObj : m_objects)
+	{
+		Food* food = dynamic_cast<Food*>(pObj);
+
+		if (food != nullptr)
+		{
+			return food;
+		}
+	}
+
+	return nullptr;
 }
