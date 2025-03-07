@@ -1,5 +1,7 @@
+#include "Game.h"
 #include "Powerup.h"
 #include "Character.h"
+#include <string>
 #include <algorithm>
 
 Character::Character() : GameObject{ { 0, 0 } }, m_healthPoints{ 0 }, m_attackPoints{ 0 }, m_defendPoints{ 0 }
@@ -44,9 +46,90 @@ void Character::Save(std::ofstream& out)
 	};
 }
 
+bool Character::Load(std::ifstream& in, const Game* game)
+{
+	if (!in.is_open())
+	{
+		return false;
+	}
+
+	char buffer[50] = { 0 };
+
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_priority = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.x = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.y = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_healthPoints = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_attackPoints = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_defendPoints = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	int powerupCount = std::stoi(buffer);
+
+	for (int i = 0; i < powerupCount; i++)
+	{
+		char name[30] = { 0 }; //Powerup names limited to 30 chars
+		in.getline(name, 30);
+		if (in.rdstate() || name[0] == 0)
+		{
+			return false;
+		}
+
+		//Match the name with the powerups loaded by the Game class
+		Powerup* up = game->FindPowerup(name, true);
+		m_powerups.push_back(up);
+	}
+
+	return true;
+}
+
 int Character::GetHP()
 {
-	return m_healthPoints;;
+	return m_healthPoints;
 }
 
 int Character::GetAT()

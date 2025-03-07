@@ -1,6 +1,6 @@
 #include "Food.h"
 #include "GameDefines.h"
-#include <fstream>
+#include <string>
 #include <iostream>
 
 using std::cout;
@@ -11,7 +11,7 @@ Food::Food() : m_healthPoints{ 10 }
 	m_priority = PRIORITY_FOOD;
 };
 
-Food::Food(Point2D position) : GameObject{ position }, m_healthPoints{ 10 }
+Food::Food(Point2D position) : GameObject{ position }
 {
 	m_priority = PRIORITY_FOOD;
 };
@@ -38,9 +38,50 @@ void Food::Save(std::ofstream& out)
 	out << m_healthPoints << "\n";
 }
 
+bool Food::Load(std::ifstream& in, const Game* game)
+{
+	if (!in.is_open())
+	{
+		return false;
+	}
+
+	char buffer[50] = { 0 };
+
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_priority = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.x = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.y = std::stoi(buffer);
+
+	in.ignore(1);
+	in.getline(buffer, 50);
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_healthPoints = std::stoi(buffer);
+}
+
 void Food::Draw()
 {
-	cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ]";
+	cout << "[ " << WHITE << "\xcf" << RESET_COLOR << " ] ";
 }
 
 void Food::DrawDescription()

@@ -111,7 +111,10 @@ void Player::Draw()
 	cout << MAGENTA << "\x81" << RESET_COLOR;
 
 	cout << INVENTORY_OUTPUT_POS;
-	for (auto it = m_powerups.begin(); it < m_powerups.end(); it++) {
+	//Clear any existing text
+	cout << CSI << "1M";
+	for (auto it = m_powerups.begin(); it < m_powerups.end(); it++) 
+	{
 		cout << (*it)->GetName() << "\t";
 	}
 }

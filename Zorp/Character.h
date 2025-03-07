@@ -1,7 +1,6 @@
 #pragma once
 #include "GameObject.h"
 #include <vector>
-#include <fstream>
 
 class Powerup;
 
@@ -18,7 +17,9 @@ public:
 	virtual void DrawDescription() = 0;
 	virtual void LookAt() = 0;
 
-	void Save(std::ofstream& out);
+	virtual void Save(std::ofstream& out);
+	virtual bool Load(std::ifstream& in, const Game* game);
+
 	int GetHP();
 	int GetAT();
 	int GetDF();

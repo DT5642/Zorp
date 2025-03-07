@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include <fstream>
 
 class Food : public GameObject
 {
@@ -11,7 +10,8 @@ public:
 
 	int GetHP();
 
-	void Save(std::ofstream& out);
+	virtual void Save(std::ofstream& out);
+	virtual bool Load(std::ifstream& in, const Game* game);
 	void Draw();
 	void DrawDescription();
 	void LookAt();

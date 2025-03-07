@@ -1,7 +1,6 @@
 #include "Room.h"
 #include "Food.h"
 #include "Enemy.h"
-#include "Player.h"
 #include "Powerup.h"
 #include "GameObject.h"
 #include "GameDefines.h"
@@ -11,7 +10,7 @@
 using std::cout;
 using std::cin;
 
-Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }, m_powerup{ nullptr }, m_enemy{ nullptr }, m_food{ nullptr }
+Room::Room() : m_type{ EMPTY }, m_mapPosition{ 0, 0 }
 {
 }
 
@@ -47,6 +46,11 @@ void Room::RemoveGameObject(GameObject* object)
 			return;
 		}
 	}
+}
+
+void Room::ClearGameObjects()
+{
+	m_objects.clear();
 }
 
 int Room::GetType()

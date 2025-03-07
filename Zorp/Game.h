@@ -3,7 +3,6 @@
 #include "Player.h"
 #include "GameDefines.h"
 
-class Food;
 class Enemy;
 class Powerup;
 
@@ -16,11 +15,11 @@ public:
 public:
 	bool Startup();
 	void Update();
-	void Draw();
-	void Save();
 	bool Load();
 
 	bool IsGameOver();
+
+	Powerup* FindPowerup(const char* name, bool isLoading = false) const;
 
 private:
 	bool EnableVirtualTerminal();
@@ -33,6 +32,11 @@ private:
 	void DrawMap();
 	void DrawValidDirections();
 
+public:
+	void Draw();
+	void Save();
+
+private:
 	int GetCommand();
 
 private:

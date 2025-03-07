@@ -1,7 +1,8 @@
 #include "Powerup.h"
 #include "GameDefines.h"
 #include <fstream>
-#include <string.h>
+#include <string>
+#include <cstring>
 #include <iostream>
 
 using std::cout;
@@ -25,27 +26,27 @@ Powerup::~Powerup()
 
 char* Powerup::GetName()
 {
-	return nullptr;
+	return m_name;
 }
 
 float Powerup::GetHealthMultiplier()
 {
-	return 0.0f;
+	return m_healthMultiplier;
 }
 
 float Powerup::GetAttackMultiplier()
 {
-	return 0.0f;
+	return m_attackMultiplier;
 }
 
 float Powerup::GetDefenceMultiplier()
 {
-	return 0.0f;
+	return m_defenceMultiplier;
 }
 
 void Powerup::Save(std::ofstream& out)
 {
-	if (!out.is_open)
+	if (!out.is_open())
 	{
 		return;
 	}
@@ -59,6 +60,73 @@ void Powerup::Save(std::ofstream& out)
 	out << m_defenceMultiplier << "\n";
 }
 
+bool Powerup::Load(std::ifstream& in, const Game* game)
+{
+	if (!in.is_open())
+	{
+		return false;
+	}
+
+	char buffer[50] = { 0 };
+
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_priority = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.x = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_mapPosition.y = std::stoi(buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	strcpy_s(m_name, buffer);
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_healthMultiplier = std::stof(buffer);	//These values are floats, so use stof()
+
+	in.ignore(1);
+	in.get(buffer, 50, ',');
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_attackMultiplier = std::stof(buffer);
+
+	in.ignore(1);
+	in.getline(buffer, 50);
+	if (in.rdstate() || buffer[0] == 0)
+	{
+		return false;
+	}
+	m_defenceMultiplier = std::stof(buffer);
+
+	return true;
+}
+
 void Powerup::SetName(const char* pStr)
 {
 	strncpy_s(m_name, pStr, 30);
@@ -66,17 +134,17 @@ void Powerup::SetName(const char* pStr)
 
 void Powerup::SetHealthMultiplier(float health)
 {
-
+	m_healthMultiplier = health;
 }
 
 void Powerup::SetAttackMultiplier(float attack)
 {
-
+	m_healthMultiplier = attack;
 }
 
 void Powerup::SetDefenceMultiplier(float defence)
 {
-
+	m_defenceMultiplier = defence;
 }
 
 bool Powerup::Compare(const Powerup* p1, const Powerup* p2)

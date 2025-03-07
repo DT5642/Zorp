@@ -18,7 +18,10 @@ public:
 
 	void AddGameObject(GameObject* object);
 	void RemoveGameObject(GameObject* object);
+	void ClearGameObjects();
+
 	int GetType();
+
 	void Draw();
 	void DrawDescription();
 	void LookAt();
@@ -32,8 +35,4 @@ private:
 	int m_type;
 
 	std::vector<GameObject*>m_objects;
-
-	Powerup* m_powerup;
-	Enemy* m_enemy;
-	Food* m_food;
 };

@@ -1,6 +1,5 @@
 #pragma once
 #include "GameObject.h"
-#include <fstream>
 
 class Powerup : public GameObject
 {
@@ -14,7 +13,9 @@ public:
 	float GetAttackMultiplier();
 	float GetDefenceMultiplier();
 
-	void Save(std::ofstream& out);
+	virtual void Save(std::ofstream& out);
+	virtual bool Load(std::ifstream& in, const Game* game);
+
 	void SetName(const char* pStr);
 	void SetHealthMultiplier(float health);
 	void SetAttackMultiplier(float attack);

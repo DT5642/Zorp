@@ -3,6 +3,7 @@
 #include "Enemy.h"
 #include "Powerup.h"
 #include <time.h>
+#include <string>
 #include <random>
 #include <fstream>
 #include <iostream>
@@ -90,99 +91,14 @@ void Game::Draw()
 	m_player.Draw();
 }
 
-void Game::Save()
-{
-	std::ofstream out;
-
-	//Open the file for ouput, and truncate (any contents that existed in the file before it is open are discarded)
-
-	out.open("Zorp_Savegame.txt", std::ofstream::out | std::ofstream::trunc);
-
-	if (out.is_open())
-	{
-		//Save the position of every gam object, and the player's stats
-		if (m_gameOver == true)
-		{
-			cout << EXTRA_OUTPUT_POS << "You have perished. Saving will not save you\n";
-			cout << INDENT << "Your progress has not been saved.\n" << RESET_COLOR;
-		}
-		else
-		{
-			//Output the powerups first, as these will need to be loaded before we load any characters 
-			//(So we can correctly copy the powerup points to the characters' powerup list)
-			out << m_powerupCount << "\n";
-
-			for (int i = 0; i < m_powerupCount; i++)
-			{
-				m_powerups[i].Save(out);
-			}
-
-			out << m_enemyCount << "\n";
-			for (int i = 0; i < m_foodCount; i++)
-			{
-				m_food[i].Save(out);
-			}
-
-			out << m_foodCount << "\n";
-			for (int i = 0; i < m_foodCount; i++)
-			{
-				m_food[i].Save(out);
-			}
-		}
-	}
-	else
-	{
-		//Could not open the file, display an error message
-		cout << EXTRA_OUTPUT_POS << RED << "A grue has corrupted the scroll of rememberance.\n";
-		cout << INDENT << "You progess has not been saved.\n" << RESET_COLOR;
-	}
-
-	out.flush();
-	out.close();
-}
-
-bool Game::Load()
-{
-	std::ifstream in;
-	in.open("Zorp_Savegame.txt", std::ifstream::in);
-
-	if (!in.is_open())
-	{
-		return false;
-	}
-
-	char buffer[50] = { 0 };
-
-	//Load all the powerups
-	if (m_tempPowerups != nullptr)
-	{
-		delete[] m_tempPowerups;
-	}
-
-	in.getline(buffer, 50);
-	m_tempPowerupCount = std::stoi(buffer);
-
-	if (in.rdstate() || m_tempPowerupCount < 0)
-	{
-		return false;
-	}
-
-	m_tempPowerups = new Powerup[m_tempPowerupCount];
-
-	for (int i = 0; i < m_tempPowerupCount; i++)
-	{
-		if (m_tempPowerups[i].Load(in, this) == false)
-		{
-			delete[] m_tempPowerups;
-			m_tempPowerups = nullptr;
-			return false;
-		}
-	}
-}
-
 bool Game::IsGameOver()
 {
 	return m_gameOver;
+}
+
+Powerup* Game::FindPowerup(const char* name, bool isLoading) const
+{
+	return nullptr;
 }
 
 bool Game::EnableVirtualTerminal()
@@ -221,7 +137,7 @@ void Game::InitialiseMap()
 		}
 	}
 
-	//Set the entrance and exit of the mase
+	//Set the entrance and exit of the maze
 	m_map[0][0].SetType(ENTRANCE);
 	m_map[MAZE_HEIGHT - 1][MAZE_WIDTH - 1].SetType(EXIT);
 }
@@ -346,6 +262,205 @@ void Game::DrawValidDirections()
 		((position.y < MAZE_HEIGHT - 1) ? "south, " : "") << "\n";
 }
 
+void Game::Save()
+{
+	std::ofstream out;
+
+	//Open the file for ouput, and truncate (any contents that existed in the file before it is open are discarded)
+
+	out.open("Zorp_Savegame.txt", std::ofstream::out | std::ofstream::trunc);
+
+	if (out.is_open())
+	{
+		//Save the position of every gam object, and the player's stats
+		if (m_gameOver == true)
+		{
+			cout << EXTRA_OUTPUT_POS << "You have perished. Saving will not save you\n";
+			cout << INDENT << "Your progress has not been saved.\n" << RESET_COLOR;
+		}
+		else
+		{
+			//Output the powerups first, as these will need to be loaded before we load any characters 
+			//(So we can correctly copy the powerup points to the characters' powerup list)
+			out << m_powerupCount << "\n";
+
+			for (int i = 0; i < m_powerupCount; i++)
+			{
+				m_powerups[i].Save(out);
+			}
+
+			out << m_enemyCount << "\n";
+			for (int i = 0; i < m_enemyCount; i++)
+			{
+				m_enemies[i].Save(out);
+			}
+
+			out << m_foodCount << "\n";
+			for (int i = 0; i < m_foodCount; i++)
+			{
+				m_food[i].Save(out);
+			}
+
+			m_player.Save(out);
+		}
+	}
+	else
+	{
+		//Could not open the file, display an error message
+		cout << EXTRA_OUTPUT_POS << RED << "A grue has corrupted the scroll of rememberance.\n";
+		cout << INDENT << "You progess has not been saved.\n" << RESET_COLOR;
+	}
+
+	out.flush();
+	out.close();
+}
+
+bool Game::Load()
+{
+	std::ifstream in;
+	in.open("Zorp_Savegame.txt", std::ofstream::in);
+
+	if (!in.is_open())
+	{
+		return false;
+	}
+
+	char buffer[50] = { 0 };
+
+	//Load all the powerups
+	if (m_tempPowerups != nullptr)
+	{
+		delete[] m_tempPowerups;
+	}
+
+	in.getline(buffer, 50);
+	m_tempPowerupCount = std::stoi(buffer);
+
+	if (in.rdstate() || m_tempPowerupCount < 0)
+	{
+		return false;
+	}
+
+	m_tempPowerups = new Powerup[m_tempPowerupCount];
+
+	for (int i = 0; i < m_tempPowerupCount; i++)
+	{
+		if (m_tempPowerups[i].Load(in, this) == false)
+		{
+			delete[] m_tempPowerups;
+			m_tempPowerups = nullptr;
+			return false;
+		}
+	}
+
+	//Load all the enemies
+	in.getline(buffer, 50);
+	int enemyCount = std::stoi(buffer);
+	if (in.rdstate() || enemyCount < 0);
+	{
+		return false;
+	}
+	Enemy* enemies = new Enemy[enemyCount];
+	for (int i = 0; i < enemyCount; i++)
+	{
+		if (enemies[i].Load(in, this) == false)
+		{
+			delete[] enemies;
+			delete[] m_tempPowerups;
+			m_tempPowerups = nullptr;
+			return false;
+		}
+	}
+
+	//Load all the food
+	in.getline(buffer, 50);
+	int foodCount = std::stoi(buffer);
+	if (in.rdstate() || foodCount < 0)
+	{
+		return false;
+	}
+	Food* foods = new Food[foodCount];
+	for (int i = 0; i < foodCount; i++)
+	{
+		if (foods[i].Load(in, this) == false)
+		{
+			delete[] foods;
+			delete[] enemies;
+			delete[] m_tempPowerups;
+			m_tempPowerups = nullptr;
+			return false;
+		}
+	}
+
+	//Load the player
+	Player player;
+	if (player.Load(in, this) == false)
+	{
+		delete[] foods;
+		delete[] enemies;
+		delete[] m_tempPowerups;
+		m_tempPowerups = nullptr;
+		return false;
+	}
+
+	//Everything succeeded up to here, so rebuild the level
+
+	//Clean out the rooms
+	for (int y = 0; y < MAZE_HEIGHT; y++)
+	{
+		for (int x = 0; x < MAZE_WIDTH; x++)
+		{
+			m_map[y][x].ClearGameObjects();
+		}
+	}
+
+	//Add the powerups
+	delete[] m_powerups;
+	m_powerups = m_tempPowerups;
+	m_powerupCount = m_tempPowerupCount;
+	m_tempPowerups = nullptr;
+
+	for (int i = 0; i < m_powerupCount; i++)
+	{
+		Point2D pos = m_powerups[i].GetPosition();
+		if (pos.x >= 0 && pos.y >= 0)
+		{
+			m_map[pos.y][pos.x].AddGameObject(&m_powerups[i]);
+		}
+	}
+
+	//Add the enemies
+	delete[] m_enemies;
+	m_enemies = enemies;
+	m_enemyCount = enemyCount;
+	for (int i = 0; i < m_enemyCount; i++)
+	{
+		Point2D pos = m_enemies[i].GetPosition();
+		if (m_enemies->IsAlive())
+		{
+			m_map[pos.y][pos.x].AddGameObject(&m_enemies[i]);
+		}
+	}
+
+	//Add the food
+	delete[] m_food;
+	m_food = foods;
+	m_foodCount = foodCount;
+
+	for (int i = 0; i < m_foodCount; i++)
+	{
+		Point2D pos = m_food[i].GetPosition();
+		if (pos.x >= 0 && pos.y >= 0)
+		{
+			m_map[pos.y][pos.x].AddGameObject(&m_food[i]);
+		}
+	}
+
+	m_player = player;
+
+	return true;
+}
+
 int Game::GetCommand()
 {
 	//For nowm we can't read commands longer than 50 characters
@@ -428,6 +543,11 @@ int Game::GetCommand()
 			//Process the save command here, as the game class is the only class with direct access to the game objects
 			Save();
 			return SAVE;
+		}
+		if (strcmp(input, "load") == 0)
+		{
+			Load();
+			return LOAD;
 		}
 
 		char next = cin.peek();
